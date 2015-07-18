@@ -1,0 +1,668 @@
+/*
+ * zeitgeist.css
+ *
+ * Thanks to Nicolas Gallagher, Jonathan Neal, Kroc Camen, and the H5BP dev
+ * community and team.
+ *
+ */
+
+
+/* =============================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section,
+summary {
+    display: block;
+}
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+audio:not([controls]) {
+    display: none;
+}
+
+[hidden] {
+    display: none;
+}
+
+
+/* =============================================================================
+   Base
+   ========================================================================== */
+
+/*
+ * 1. Correct text resizing oddly in IE6/7 when body font-size is set using em units
+ * 2. Prevent iOS text size adjust on device orientation change, without disabling user zoom: h5bp.com/g
+ */
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: sans-serif;
+    color: #222;
+}
+
+body {
+    width: 48em;
+    margin: 0 auto;
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+/*
+ * Remove text-shadow in selection highlight: h5bp.com/i
+ * These selection declarations have to be separate.
+ * Customize the background color to match your design.
+ */
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+
+/* =============================================================================
+   Links
+   ========================================================================== */
+
+a {
+    color: #00e;
+}
+
+a:visited {
+    color: #551a8b;
+}
+
+a:hover {
+    color: #06e;
+}
+
+a:focus {
+    outline: thin dotted;
+}
+
+/*
+ * Improve readability when focused and hovered in all browsers: h5bp.com/h
+ */
+
+a:hover,
+a:active {
+    outline: 0;
+}
+
+
+/* =============================================================================
+   Typography
+   ========================================================================== */
+
+body {
+    font: 1em/1.625em "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+    font-size-adjust: none;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    background-color: #FFFEF0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    color: #333;
+    font-family: Georgia, serif;
+}
+
+h1 {
+    font-size: 2.125em;
+    margin-bottom: 0.765em;
+}
+
+h2 {
+    font-size: 1.9em;
+    margin-bottom: 0.855em;
+}
+
+h3 {
+    font-size: 1.7em;
+    margin-bottom: 0.956em;
+}
+
+h4 {
+    font-size: 1.4em;
+    margin-bottom: 1.161em;
+}
+
+h5, h6 {
+    font-size: 1.313em;
+    margin-bottom: 1.238em;
+}
+
+a {
+    color: #005AF2;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+abbr, acronym {
+    border-bottom: 1px dotted #000;
+}
+
+address {
+    margin-top: 1.625em;
+    font-style: italic;
+}
+
+b,
+strong {
+    font-weight: bold;
+}
+
+blockquote {
+    padding: 1em 1em 1.625em 1em;
+    font-family: Georgia, serif;
+    font-style: italic;
+}
+
+blockquote:before {
+    content: "\201C";
+    font-size: 3em;
+    margin-left: -0.625em;
+    font-family: Georgia, serif;
+    color: #aaa;
+    line-height: 0;
+}
+
+blockquote > p {
+    padding: 0;
+    margin: 0;
+}
+
+caption {
+    text-align: center;
+    font-family: Georgia, serif;
+}
+
+del {
+    color: #000;
+}
+
+dfn, em {
+    font-style: italic;
+}
+
+dfn {
+    font-weight: bold;
+}
+
+dl {
+    margin: 0 0 1.625em 0;
+}
+
+dl dt {
+    font-weight: bold;
+}
+
+dl dd {
+    margin-left: 1.625em;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin-bottom: 1.625em;
+    padding: 0;
+}
+
+ins {
+    background: #ff9;
+    color: #000;
+    text-decoration: none;
+}
+
+mark {
+    background: #ff0;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+}
+
+p {
+    padding: 0 0 0.8125em 0;
+    color: #111;
+    font-weight: 300;
+}
+
+p + p {
+    text-indent: 1.625em;
+}
+
+p.first:first-letter {
+    float: left;
+    font-family: Baskerville, "Palatino Linotype", serif;
+    font-size: 3em;
+    font-weight: 700;
+    line-height: 1em;
+    margin-bottom: -0.2em;
+    padding: 0.2em 0.1em 0 0;
+}
+
+p img {
+    float: left;
+    margin: 0.5em 0.8125em 0.8125em 0;
+    padding: 0;
+}
+
+p img.right {
+    float: right;
+    margin: 0.5em 0 0.8125em 0.8125em;
+}
+
+/*
+ * Redeclare monospace font family: h5bp.com/j
+ */
+
+pre,
+code,
+kbd,
+samp,
+tt {
+    font-family: Monaco, "Lucida Mono", "Liberation Mono", "Courier New", "Courier", monospace;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
+    background: #eee;
+    line-height: 1.5;
+}
+
+/*
+ * Improve readability of pre-formatted text
+ */
+
+pre, code {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 1.625em 0;
+}
+
+q {
+    quotes: none;
+}
+
+q:before,
+q:after {
+    content: "";
+    content: none;
+}
+
+small {
+    font-size: 85%;
+}
+
+
+
+/*
+ * Position subscript and superscript content without affecting line-height: h5bp.com/k
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+tt {
+    display: block;
+    margin: 1.625em 0;
+}
+
+/* =============================================================================
+   Lists
+   ========================================================================== */
+
+ul,
+ol {
+    list-style-position: outside;
+    margin: 0 0 1.625em 0;
+    padding: 0 0 0 40px;
+}
+
+li ul, li ol {
+    margin: 0 1.625em;
+}
+
+nav ul,
+nav ol {
+    list-style: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =============================================================================
+   Embedded content
+   ========================================================================== */
+
+/*
+ * 1. Improve image quality when scaled in IE7: h5bp.com/d
+ * 2. Remove the gap between images and borders on image containers: h5bp.com/i/440
+ */
+
+img {
+    border: 0;
+    vertical-align: middle;
+    -ms-interpolation-mode: bicubic;
+}
+
+/*
+ * Correct overflow not hidden in IE9
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+
+/* =============================================================================
+   Figures
+   ========================================================================== */
+
+figure {
+    margin: 0;
+}
+
+
+/* =============================================================================
+   Forms
+   ========================================================================== */
+
+form {
+    margin: 0;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * Indicate that 'label' will shift focus to the associated form element
+ */
+
+label {
+    cursor: pointer;
+}
+
+/*
+ * 1. Correct color not inheriting in IE6/7/8/9
+ * 2. Correct alignment displayed oddly in IE6/7
+ */
+
+legend {
+    border: 0;
+    padding: 0;
+    white-space: normal;
+    *margin-left: -7px;
+}
+
+/*
+ * 1. Correct font-size not inheriting in all browsers
+ * 2. Remove margins in FF3/4 S5 Chrome
+ * 3. Define consistent vertical alignment display in all browsers
+ */
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%;
+    margin: 0;
+    vertical-align: baseline;
+    *vertical-align: middle;
+}
+
+/*
+ * 1. Define line-height as normal to match FF3/4 (set using !important in the UA stylesheet)
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/*
+ * 1. Display hand cursor for clickable form elements
+ * 2. Allow styling of clickable form elements in iOS
+ * 3. Correct inner spacing displayed oddly in IE7 (doesn't effect IE6)
+ */
+
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    cursor: pointer;
+    -webkit-appearance: button;
+    *overflow: visible;
+}
+
+/*
+ * Re-set default cursor for disabled elements
+ */
+
+button[disabled],
+input[disabled] {
+    cursor: default;
+}
+
+/*
+ * Consistent box sizing and appearance
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+    *width: 13px;
+    *height: 13px;
+}
+
+input[type="search"] {
+    -webkit-appearance: textfield;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+/*
+ * Remove inner padding and border in FF3/4: h5bp.com/l
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/*
+ * 1. Remove default vertical scrollbar in IE6/7/8/9
+ * 2. Allow only vertical resizing
+ */
+
+textarea {
+    overflow: auto;
+    vertical-align: top;
+    resize: vertical;
+}
+
+
+/* =============================================================================
+   Tables
+   ========================================================================== */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 1.625em;
+}
+
+th {
+    font-weight: bold;
+}
+
+tr, th, td {
+    margin: 0;
+    padding: 0 1.625em 0 1em;
+    height: 26px;
+}
+
+td {
+    vertical-align: top;
+}
+
+tfoot {
+    font-style: italic;
+}
+
+
+/* =============================================================================
+   Chrome Frame Prompt
+   ========================================================================== */
+
+.chromeframe {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@media screen {
+
+}
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow:none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+@media projection {
+
+}
+
+@media handheld {
+
+}
