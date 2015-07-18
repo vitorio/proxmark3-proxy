@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TNP3 test 04</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/zeitgeist.css">
+    <script src="/static/xhr.js"></script>
+    <script src="/static/pure.js"></script>
+</head>
+<body>
+
+<button id="readtnp3">Read TNP3</button>
+<table id="tnp3info">
+<tr>
+<th>Name</th><td data-name></td>
+</tr>
+<tr>
+<th>UID</th><td data-uid></td>
+</tr>
+<tr>
+<th>ATQA</th><td data-atqa></td>
+</tr>
+<tr>
+<th>SAK</th><td data-sak></td>
+</tr>
+</table>
+
+<script>
+var TNP3 = TNP3 || {};
+
+TNP3.infodirective = {'td[data-name]': 'name', 'td[data-uid]': 'uid', 'td[data-atqa]': 'atqa', 'td[data-sak]': 'sak'}
+
+TNP3.readbutton = function() {
+	var x = new fiji.xhr()
+	x.req('get', '/json-tnp3-reader', function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var readjson = JSON.parse(this.responseText);
+			if ("error" in readjson) {
+				$p('#tnp3info').render({}, TNP3.infodirective);
+				alert(readjson.error);
+			} else {
+				$p('#tnp3info').render(readjson, TNP3.infodirective);
+			};
+		};
+	});
+	x.send();
+};
+
+document.getElementById('readtnp3').onclick = TNP3.readbutton;
+</script>
+</body>
+</html>
