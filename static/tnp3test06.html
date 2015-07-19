@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TNP3 test 06</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/zeitgeist.css">
+    <script src="/static/pure.js"></script>
+</head>
+<body>
+
+<button id="readtnp3">Read TNP3</button>
+<table id="tnp3info">
+<tr>
+<th>Name</th><td data-name></td>
+</tr>
+</table>
+
+<table id="tnp3token">
+<tr>
+<th>Sector 0<br><button id="reads00">Read Sector 0</button></th><th>Block 0<br><button id="readbzero">Read Block 0</button></th><td data-s00 data-b00></td>
+</tr>
+</table>
+
+
+<script>
+var TNP3 = TNP3 || {};
+
+TNP3.infodirective = {'td[data-name]': 'name'};
+
+TNP3.b00directive = {'td[data-b00]': 'block'};
+
+TNP3.readbutton = function() {
+	console.log('r')
+	$p('#tnp3info').render({}, TNP3.infodirective);
+};
+
+TNP3.b00button = function() {
+	console.log('b001');
+	$p('#tnp3token').render({}, TNP3.b00directive);
+	document.getElementById('readbzero').onclick = TNP3.b00button;
+};
+
+document.getElementById('readtnp3').onclick = TNP3.readbutton;
+document.getElementById('readbzero').onclick = TNP3.b00button;
+</script>
+</body>
+</html>
