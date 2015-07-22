@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TNP3 test 07</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/zeitgeist.css">
+    <script src="/static/reqwest.js"></script>
+    <script src="/static/pure.js"></script>
+</head>
+<body>
+
+<button id="readtnp3">Read TNP3</button>
+<table id="tnp3info">
+<tr>
+<th>Name</th><td data-name></td>
+</tr>
+<tr>
+<th>UID</th><td data-uid></td>
+</tr>
+<tr>
+<th>ATQA</th><td data-atqa></td>
+</tr>
+<tr>
+<th>SAK</th><td data-sak></td>
+</tr>
+</table>
+
+<table id="tnp3token">
+<tr>
+<th rowspan="4">Sector 0<br><button id="reads00">Read Sector 0</button></th><th>Block 0<br><button id="readb00">Read Block 0</button></th><td data-s00 data-b00></td>
+</tr>
+<tr>
+<th>Block 1<br><button id="readb01">Read Block 1</button></th><td data-s00 data-b01></td>
+</tr>
+<tr>
+<th>Block 2<br><button id="readb02">Read Block 2</button></th><td data-s00 data-b02></td>
+</tr>
+<tr>
+<th>Block 3<br><button id="readb03">Read Block 3</button></th><td data-s00 data-b03></td>
+</tr>
+</table>
+
+
+<script>
+var TNP3 = TNP3 || {};
+
+TNP3.infodirective = {'td[data-name]': 'name', 'td[data-uid]': 'uid', 'td[data-atqa]': 'atqa', 'td[data-sak]': 'sak'};
+
+TNP3.b00directive = {'td[data-b00]': 'block'};
+
+TNP3.keysA = {};
+
+TNP3.readbutton = function() {
+	reqwest({url: '/json-tnp3-reader', type: 'json', success: function(readjson) {
+		if ("error" in readjson) {
+			$p('#tnp3info').render({}, TNP3.infodirective);
+			alert(readjson.error);
+		} else {
+			TNP3.keysA = readjson.keysA
+			$p('#tnp3info').render(readjson, TNP3.infodirective);
+		};
+	}});
+};
+
+TNP3.b00button = function() {
+	reqwest({url: '/json-tnp3-block00', data: {keya: TNP3.keysA[0]}, type: 'json', success: function(readjson) {
+		if ("error" in readjson) {
+			$p('#tnp3token').render({}, TNP3.b00directive);
+			alert(readjson.error);
+		} else {
+			$p('#tnp3token').render(readjson, TNP3.b00directive);
+		};
+		// This button is inside the template, and so needs to be re-bound
+		document.getElementById('readb00').onclick = TNP3.b00button;
+	}});
+};
+
+document.getElementById('readtnp3').onclick = TNP3.readbutton;
+document.getElementById('readb00').onclick = TNP3.b00button;
+</script>
+</body>
+</html>
