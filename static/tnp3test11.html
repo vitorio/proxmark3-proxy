@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TNP3 test 11</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+	<!-- <link rel="stylesheet" href="/static/zeitgeist.css"> -->
+    <script src="/static/reqwest.js"></script>
+    <script src="/static/pure.js"></script>
+    <script src="/static/FileSaver.js"></script>
+	<style>
+	#tnp3token tr:nth-child(2), #tnp3token tr:nth-child(3), #tnp3token tr:nth-child(4), #tnp3token tr:nth-child(5), #tnp3token tr:nth-child(10), #tnp3token tr:nth-child(11), #tnp3token tr:nth-child(12), #tnp3token tr:nth-child(13), #tnp3token tr:nth-child(18), #tnp3token tr:nth-child(19), #tnp3token tr:nth-child(20), #tnp3token tr:nth-child(21), #tnp3token tr:nth-child(26), #tnp3token tr:nth-child(27), #tnp3token tr:nth-child(28), #tnp3token tr:nth-child(29), #tnp3token tr:nth-child(34), #tnp3token tr:nth-child(35), #tnp3token tr:nth-child(36), #tnp3token tr:nth-child(37), #tnp3token tr:nth-child(42), #tnp3token tr:nth-child(43), #tnp3token tr:nth-child(44), #tnp3token tr:nth-child(45), #tnp3token tr:nth-child(50), #tnp3token tr:nth-child(51), #tnp3token tr:nth-child(52), #tnp3token tr:nth-child(53), #tnp3token tr:nth-child(58), #tnp3token tr:nth-child(59), #tnp3token tr:nth-child(60), #tnp3token tr:nth-child(61) { background-color: #ccc; }
+	button.error, td.error { color: red; }
+	td.data, td.ascii, textarea { font-family: monospace; }
+	textarea { resize: none; }
+	.none { display: none; }
+	#editors { float: right; }
+	</style>
+</head>
+<body>
+
+<button id="readtnp3">Read TNP3</button>
+<table id="tnp3info">
+<tr><th>Name</th><td data-name></td></tr>
+<tr><th>UID</th><td data-uid></td></tr>
+<tr><th>ATQA</th><td data-atqa></td></tr>
+<tr><th>SAK</th><td data-sak></td></tr>
+</table>
+
+<button id="readsectors">Read sectors</button> <button id="toggletrailers">Toggle trailers</button> <button id="togglesectors">Toggle sectors</button> <button id="togglerenders">Toggle renders</button> <button id="toggleerrors">Toggle errors</button>
+
+<table id="tnp3token">
+<tr><th rowspan="1">Sector</th><th>Block</th><th>Hex</th><th class="ascii">ASCII</th><th class="unicode">Unicode</th><th class="error">↻</th><th class="error">Error</th></tr>
+
+<tr><th rowspan="3">Sector 0 = 0x00<br><button id="reads00" title="Refresh sector 0">↻</button></th>
+    <th>Block 0 = 0x00</th><td class="data" data-s00 data-b00></td><td class="ascii" data-s00 data-b00></td><td class="unicode" data-s00 data-b00></td><th><button id="readb00" title="Refresh block 0">↻</button></th><td class="error" data-s00 data-b00></td></tr>
+<tr><th>Block 1 = 0x01</th><td class="data" data-s00 data-b01></td><td class="ascii" data-s00 data-b01></td><td class="unicode" data-s00 data-b01></td><th><button id="readb01" title="Refresh block 1">↻</button></th><td class="error" data-s00 data-b01></td></tr>
+<tr><th>Block 2 = 0x02</th><td class="data" data-s00 data-b02></td><td class="ascii" data-s00 data-b02></td><td class="unicode" data-s00 data-b02></td><th><button id="readb02" title="Refresh block 2">↻</button></th><td class="error" data-s00 data-b02></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 3 = 0x03</th><td class="data" data-s00 data-b03></td><td class="ascii" data-s00 data-b03></td><td class="unicode" data-s00 data-b03></td><th><button id="readb03" title="Refresh block 3">↻</button></th><td class="error" data-s00 data-b03></td></tr>
+
+
+<tr><th rowspan="3">Sector 1 = 0x01<br><button id="reads01" title="Refresh sector 1">↻</button></th>
+    <th>Block 4 = 0x04</th><td class="data" data-s01 data-b04></td><td class="ascii" data-s01 data-b04></td><td class="unicode" data-s01 data-b04></td><th><button id="readb04" title="Refresh block 4">↻</button></th><td class="error" data-s01 data-b04></td></tr>
+<tr><th>Block 5 = 0x05</th><td class="data" data-s01 data-b05></td><td class="ascii" data-s01 data-b05></td><td class="unicode" data-s01 data-b05></td><th><button id="readb05" title="Refresh block 5">↻</button></th><td class="error" data-s01 data-b05></td></tr>
+<tr><th>Block 6 = 0x06</th><td class="data" data-s01 data-b06></td><td class="ascii" data-s01 data-b06></td><td class="unicode" data-s01 data-b06></td><th><button id="readb06" title="Refresh block 6">↻</button></th><td class="error" data-s01 data-b06></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 7 = 0x07</th><td class="data" data-s01 data-b07></td><td class="ascii" data-s01 data-b07></td><td class="unicode" data-s01 data-b07></td><th><button id="readb07" title="Refresh block 7">↻</button></th><td class="error" data-s01 data-b07></td></tr>
+
+
+<tr><th rowspan="3">Sector 2 = 0x02<br><button id="reads02" title="Refresh sector 2">↻</button></th>
+    <th>Block 8 = 0x08</th><td class="data" data-s02 data-b08></td><td class="ascii" data-s02 data-b08></td><td class="unicode" data-s02 data-b08></td><th><button id="readb08" title="Refresh block 8">↻</button></th><td class="error" data-s02 data-b08></td></tr>
+<tr><th>Block 9 = 0x09</th><td class="data" data-s02 data-b09></td><td class="ascii" data-s02 data-b09></td><td class="unicode" data-s02 data-b09></td><th><button id="readb09" title="Refresh block 9">↻</button></th><td class="error" data-s02 data-b09></td></tr>
+<tr><th>Block 10 = 0x0a</th><td class="data" data-s02 data-b10></td><td class="ascii" data-s02 data-b10></td><td class="unicode" data-s02 data-b10></td><th><button id="readb10" title="Refresh block 10">↻</button></th><td class="error" data-s02 data-b10></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 11 = 0x0b</th><td class="data" data-s02 data-b11></td><td class="ascii" data-s02 data-b11></td><td class="unicode" data-s02 data-b11></td><th><button id="readb11" title="Refresh block 11">↻</button></th><td class="error" data-s02 data-b11></td></tr>
+
+
+<tr><th rowspan="3">Sector 3 = 0x03<br><button id="reads03" title="Refresh sector 3">↻</button></th>
+    <th>Block 12 = 0x0c</th><td class="data" data-s03 data-b12></td><td class="ascii" data-s03 data-b12></td><td class="unicode" data-s03 data-b12></td><th><button id="readb12" title="Refresh block 12">↻</button></th><td class="error" data-s03 data-b12></td></tr>
+<tr><th>Block 13 = 0x0d</th><td class="data" data-s03 data-b13></td><td class="ascii" data-s03 data-b13></td><td class="unicode" data-s03 data-b13></td><th><button id="readb13" title="Refresh block 13">↻</button></th><td class="error" data-s03 data-b13></td></tr>
+<tr><th>Block 14 = 0x0e</th><td class="data" data-s03 data-b14></td><td class="ascii" data-s03 data-b14></td><td class="unicode" data-s03 data-b14></td><th><button id="readb14" title="Refresh block 14">↻</button></th><td class="error" data-s03 data-b14></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 15 = 0x0f</th><td class="data" data-s03 data-b15></td><td class="ascii" data-s03 data-b15></td><td class="unicode" data-s03 data-b15></td><th><button id="readb15" title="Refresh block 15">↻</button></th><td class="error" data-s03 data-b15></td></tr>
+
+
+<tr><th rowspan="3">Sector 4 = 0x04<br><button id="reads04" title="Refresh sector 4">↻</button></th>
+    <th>Block 16 = 0x10</th><td class="data" data-s04 data-b16></td><td class="ascii" data-s04 data-b16></td><td class="unicode" data-s04 data-b16></td><th><button id="readb16" title="Refresh block 16">↻</button></th><td class="error" data-s04 data-b16></td></tr>
+<tr><th>Block 17 = 0x11</th><td class="data" data-s04 data-b17></td><td class="ascii" data-s04 data-b17></td><td class="unicode" data-s04 data-b17></td><th><button id="readb17" title="Refresh block 17">↻</button></th><td class="error" data-s04 data-b17></td></tr>
+<tr><th>Block 18 = 0x12</th><td class="data" data-s04 data-b18></td><td class="ascii" data-s04 data-b18></td><td class="unicode" data-s04 data-b18></td><th><button id="readb18" title="Refresh block 18">↻</button></th><td class="error" data-s04 data-b18></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 19 = 0x13</th><td class="data" data-s04 data-b19></td><td class="ascii" data-s04 data-b19></td><td class="unicode" data-s04 data-b19></td><th><button id="readb19" title="Refresh block 19">↻</button></th><td class="error" data-s04 data-b19></td></tr>
+
+
+<tr><th rowspan="3">Sector 5 = 0x05<br><button id="reads05" title="Refresh sector 5">↻</button></th>
+    <th>Block 20 = 0x14</th><td class="data" data-s05 data-b20></td><td class="ascii" data-s05 data-b20></td><td class="unicode" data-s05 data-b20></td><th><button id="readb20" title="Refresh block 20">↻</button></th><td class="error" data-s05 data-b20></td></tr>
+<tr><th>Block 21 = 0x15</th><td class="data" data-s05 data-b21></td><td class="ascii" data-s05 data-b21></td><td class="unicode" data-s05 data-b21></td><th><button id="readb21" title="Refresh block 21">↻</button></th><td class="error" data-s05 data-b21></td></tr>
+<tr><th>Block 22 = 0x16</th><td class="data" data-s05 data-b22></td><td class="ascii" data-s05 data-b22></td><td class="unicode" data-s05 data-b22></td><th><button id="readb22" title="Refresh block 22">↻</button></th><td class="error" data-s05 data-b22></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 23 = 0x17</th><td class="data" data-s05 data-b23></td><td class="ascii" data-s05 data-b23></td><td class="unicode" data-s05 data-b23></td><th><button id="readb23" title="Refresh block 23">↻</button></th><td class="error" data-s05 data-b23></td></tr>
+
+
+<tr><th rowspan="3">Sector 6 = 0x06<br><button id="reads06" title="Refresh sector 6">↻</button></th>
+    <th>Block 24 = 0x18</th><td class="data" data-s06 data-b24></td><td class="ascii" data-s06 data-b24></td><td class="unicode" data-s06 data-b24></td><th><button id="readb24" title="Refresh block 24">↻</button></th><td class="error" data-s06 data-b24></td></tr>
+<tr><th>Block 25 = 0x19</th><td class="data" data-s06 data-b25></td><td class="ascii" data-s06 data-b25></td><td class="unicode" data-s06 data-b25></td><th><button id="readb25" title="Refresh block 25">↻</button></th><td class="error" data-s06 data-b25></td></tr>
+<tr><th>Block 26 = 0x1a</th><td class="data" data-s06 data-b26></td><td class="ascii" data-s06 data-b26></td><td class="unicode" data-s06 data-b26></td><th><button id="readb26" title="Refresh block 26">↻</button></th><td class="error" data-s06 data-b26></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 27 = 0x1b</th><td class="data" data-s06 data-b27></td><td class="ascii" data-s06 data-b27></td><td class="unicode" data-s06 data-b27></td><th><button id="readb27" title="Refresh block 27">↻</button></th><td class="error" data-s06 data-b27></td></tr>
+
+
+<tr><th rowspan="3">Sector 7 = 0x07<br><button id="reads07" title="Refresh sector 7">↻</button></th>
+    <th>Block 28 = 0x1c</th><td class="data" data-s07 data-b28></td><td class="ascii" data-s07 data-b28></td><td class="unicode" data-s07 data-b28></td><th><button id="readb28" title="Refresh block 28">↻</button></th><td class="error" data-s07 data-b28></td></tr>
+<tr><th>Block 29 = 0x1d</th><td class="data" data-s07 data-b29></td><td class="ascii" data-s07 data-b29></td><td class="unicode" data-s07 data-b29></td><th><button id="readb29" title="Refresh block 29">↻</button></th><td class="error" data-s07 data-b29></td></tr>
+<tr><th>Block 30 = 0x1e</th><td class="data" data-s07 data-b30></td><td class="ascii" data-s07 data-b30></td><td class="unicode" data-s07 data-b30></td><th><button id="readb30" title="Refresh block 30">↻</button></th><td class="error" data-s07 data-b30></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 31 = 0x1f</th><td class="data" data-s07 data-b31></td><td class="ascii" data-s07 data-b31></td><td class="unicode" data-s07 data-b31></td><th><button id="readb31" title="Refresh block 31">↻</button></th><td class="error" data-s07 data-b31></td></tr>
+
+
+<tr><th rowspan="3">Sector 8 = 0x08<br><button id="reads08" title="Refresh sector 8">↻</button></th>
+    <th>Block 32 = 0x20</th><td class="data" data-s08 data-b32></td><td class="ascii" data-s08 data-b32></td><td class="unicode" data-s08 data-b32></td><th><button id="readb32" title="Refresh block 32">↻</button></th><td class="error" data-s08 data-b32></td></tr>
+<tr><th>Block 33 = 0x21</th><td class="data" data-s08 data-b33></td><td class="ascii" data-s08 data-b33></td><td class="unicode" data-s08 data-b33></td><th><button id="readb33" title="Refresh block 33">↻</button></th><td class="error" data-s08 data-b33></td></tr>
+<tr><th>Block 34 = 0x22</th><td class="data" data-s08 data-b34></td><td class="ascii" data-s08 data-b34></td><td class="unicode" data-s08 data-b34></td><th><button id="readb34" title="Refresh block 34">↻</button></th><td class="error" data-s08 data-b34></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 35 = 0x23</th><td class="data" data-s08 data-b35></td><td class="ascii" data-s08 data-b35></td><td class="unicode" data-s08 data-b35></td><th><button id="readb35" title="Refresh block 35">↻</button></th><td class="error" data-s08 data-b35></td></tr>
+
+
+<tr><th rowspan="3">Sector 9 = 0x09<br><button id="reads09" title="Refresh sector 9">↻</button></th>
+    <th>Block 36 = 0x24</th><td class="data" data-s09 data-b36></td><td class="ascii" data-s09 data-b36></td><td class="unicode" data-s09 data-b36></td><th><button id="readb36" title="Refresh block 36">↻</button></th><td class="error" data-s09 data-b36></td></tr>
+<tr><th>Block 37 = 0x25</th><td class="data" data-s09 data-b37></td><td class="ascii" data-s09 data-b37></td><td class="unicode" data-s09 data-b37></td><th><button id="readb37" title="Refresh block 37">↻</button></th><td class="error" data-s09 data-b37></td></tr>
+<tr><th>Block 38 = 0x26</th><td class="data" data-s09 data-b38></td><td class="ascii" data-s09 data-b38></td><td class="unicode" data-s09 data-b38></td><th><button id="readb38" title="Refresh block 38">↻</button></th><td class="error" data-s09 data-b38></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 39 = 0x27</th><td class="data" data-s09 data-b39></td><td class="ascii" data-s09 data-b39></td><td class="unicode" data-s09 data-b39></td><th><button id="readb39" title="Refresh block 39">↻</button></th><td class="error" data-s09 data-b39></td></tr>
+
+
+<tr><th rowspan="3">Sector 10 = 0x0a<br><button id="reads10" title="Refresh sector 10">↻</button></th>
+    <th>Block 40 = 0x28</th><td class="data" data-s10 data-b40></td><td class="ascii" data-s10 data-b40></td><td class="unicode" data-s10 data-b40></td><th><button id="readb40" title="Refresh block 40">↻</button></th><td class="error" data-s10 data-b40></td></tr>
+<tr><th>Block 41 = 0x29</th><td class="data" data-s10 data-b41></td><td class="ascii" data-s10 data-b41></td><td class="unicode" data-s10 data-b41></td><th><button id="readb41" title="Refresh block 41">↻</button></th><td class="error" data-s10 data-b41></td></tr>
+<tr><th>Block 42 = 0x2a</th><td class="data" data-s10 data-b42></td><td class="ascii" data-s10 data-b42></td><td class="unicode" data-s10 data-b42></td><th><button id="readb42" title="Refresh block 42">↻</button></th><td class="error" data-s10 data-b42></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 43 = 0x2b</th><td class="data" data-s10 data-b43></td><td class="ascii" data-s10 data-b43></td><td class="unicode" data-s10 data-b43></td><th><button id="readb43" title="Refresh block 43">↻</button></th><td class="error" data-s10 data-b43></td></tr>
+
+
+<tr><th rowspan="3">Sector 11 = 0x0b<br><button id="reads11" title="Refresh sector 11">↻</button></th>
+    <th>Block 44 = 0x2c</th><td class="data" data-s11 data-b44></td><td class="ascii" data-s11 data-b44></td><td class="unicode" data-s11 data-b44></td><th><button id="readb44" title="Refresh block 44">↻</button></th><td class="error" data-s11 data-b44></td></tr>
+<tr><th>Block 45 = 0x2d</th><td class="data" data-s11 data-b45></td><td class="ascii" data-s11 data-b45></td><td class="unicode" data-s11 data-b45></td><th><button id="readb45" title="Refresh block 45">↻</button></th><td class="error" data-s11 data-b45></td></tr>
+<tr><th>Block 46 = 0x2e</th><td class="data" data-s11 data-b46></td><td class="ascii" data-s11 data-b46></td><td class="unicode" data-s11 data-b46></td><th><button id="readb46" title="Refresh block 46">↻</button></th><td class="error" data-s11 data-b46></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 47 = 0x2f</th><td class="data" data-s11 data-b47></td><td class="ascii" data-s11 data-b47></td><td class="unicode" data-s11 data-b47></td><th><button id="readb47" title="Refresh block 47">↻</button></th><td class="error" data-s11 data-b47></td></tr>
+
+
+<tr><th rowspan="3">Sector 12 = 0x0c<br><button id="reads12" title="Refresh sector 12">↻</button></th>
+    <th>Block 48 = 0x30</th><td class="data" data-s12 data-b48></td><td class="ascii" data-s12 data-b48></td><td class="unicode" data-s12 data-b48></td><th><button id="readb48" title="Refresh block 48">↻</button></th><td class="error" data-s12 data-b48></td></tr>
+<tr><th>Block 49 = 0x31</th><td class="data" data-s12 data-b49></td><td class="ascii" data-s12 data-b49></td><td class="unicode" data-s12 data-b49></td><th><button id="readb49" title="Refresh block 49">↻</button></th><td class="error" data-s12 data-b49></td></tr>
+<tr><th>Block 50 = 0x32</th><td class="data" data-s12 data-b50></td><td class="ascii" data-s12 data-b50></td><td class="unicode" data-s12 data-b50></td><th><button id="readb50" title="Refresh block 50">↻</button></th><td class="error" data-s12 data-b50></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 51 = 0x33</th><td class="data" data-s12 data-b51></td><td class="ascii" data-s12 data-b51></td><td class="unicode" data-s12 data-b51></td><th><button id="readb51" title="Refresh block 51">↻</button></th><td class="error" data-s12 data-b51></td></tr>
+
+
+<tr><th rowspan="3">Sector 13 = 0x0d<br><button id="reads13" title="Refresh sector 13">↻</button></th>
+    <th>Block 52 = 0x34</th><td class="data" data-s13 data-b52></td><td class="ascii" data-s13 data-b52></td><td class="unicode" data-s13 data-b52></td><th><button id="readb52" title="Refresh block 52">↻</button></th><td class="error" data-s13 data-b52></td></tr>
+<tr><th>Block 53 = 0x35</th><td class="data" data-s13 data-b53></td><td class="ascii" data-s13 data-b53></td><td class="unicode" data-s13 data-b53></td><th><button id="readb53" title="Refresh block 53">↻</button></th><td class="error" data-s13 data-b53></td></tr>
+<tr><th>Block 54 = 0x36</th><td class="data" data-s13 data-b54></td><td class="ascii" data-s13 data-b54></td><td class="unicode" data-s13 data-b54></td><th><button id="readb54" title="Refresh block 54">↻</button></th><td class="error" data-s13 data-b54></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 55 = 0x37</th><td class="data" data-s13 data-b55></td><td class="ascii" data-s13 data-b55></td><td class="unicode" data-s13 data-b55></td><th><button id="readb55" title="Refresh block 55">↻</button></th><td class="error" data-s13 data-b55></td></tr>
+
+
+<tr><th rowspan="3">Sector 14 = 0x0e<br><button id="reads14" title="Refresh sector 14">↻</button></th>
+    <th>Block 56 = 0x38</th><td class="data" data-s14 data-b56></td><td class="ascii" data-s14 data-b56></td><td class="unicode" data-s14 data-b56></td><th><button id="readb56" title="Refresh block 56">↻</button></th><td class="error" data-s14 data-b56></td></tr>
+<tr><th>Block 57 = 0x39</th><td class="data" data-s14 data-b57></td><td class="ascii" data-s14 data-b57></td><td class="unicode" data-s14 data-b57></td><th><button id="readb57" title="Refresh block 57">↻</button></th><td class="error" data-s14 data-b57></td></tr>
+<tr><th>Block 58 = 0x3a</th><td class="data" data-s14 data-b58></td><td class="ascii" data-s14 data-b58></td><td class="unicode" data-s14 data-b58></td><th><button id="readb58" title="Refresh block 58">↻</button></th><td class="error" data-s14 data-b58></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 59 = 0x3b</th><td class="data" data-s14 data-b59></td><td class="ascii" data-s14 data-b59></td><td class="unicode" data-s14 data-b59></td><th><button id="readb59" title="Refresh block 59">↻</button></th><td class="error" data-s14 data-b59></td></tr>
+
+
+<tr><th rowspan="3">Sector 15 = 0x0f<br><button id="reads15" title="Refresh sector 15">↻</button></th>
+    <th>Block 60 = 0x3c</th><td class="data" data-s15 data-b60></td><td class="ascii" data-s15 data-b60></td><td class="unicode" data-s15 data-b60></td><th><button id="readb60" title="Refresh block 60">↻</button></th><td class="error" data-s15 data-b60></td></tr>
+<tr><th>Block 61 = 0x3d</th><td class="data" data-s15 data-b61></td><td class="ascii" data-s15 data-b61></td><td class="unicode" data-s15 data-b61></td><th><button id="readb61" title="Refresh block 61">↻</button></th><td class="error" data-s15 data-b61></td></tr>
+<tr><th>Block 62 = 0x3e</th><td class="data" data-s15 data-b62></td><td class="ascii" data-s15 data-b62></td><td class="unicode" data-s15 data-b62></td><th><button id="readb62" title="Refresh block 62">↻</button></th><td class="error" data-s15 data-b62></td></tr>
+<tr data-trailer><th></th>
+    <th>Block 63 = 0x3f</th><td class="data" data-s15 data-b63></td><td class="ascii" data-s15 data-b63></td><td class="unicode" data-s15 data-b63></td><th><button id="readb63" title="Refresh block 63">↻</button></th><td class="error" data-s15 data-b63></td></tr>
+
+</table>
+
+<input id="addlname"> <button id="savetoytxt">Save toy (text)</button> <button id="savetoybin">Save toy (binary)</button> <button id="savemuttxt">Save mutable data (text)</button> <button id="savemutbin">Save mutable data (binary)</button>
+
+
+<div id="editors">
+	<button id="loadeditors">Load editors</button> <button id="cleareditors">Clear editors</button> <button id="validateeditors">Validate editors</button> <button id="writechanges">Write changes</button><br>
+	<textarea id="oldtext" cols="32" rows="64" readonly></textarea> <textarea id="newtext" cols="32" rows="64"></textarea>
+</div>
+
+<script>
+var TNP3 = TNP3 || {};
+
+TNP3.infodirective = {'td[data-name]': 'name', 'td[data-uid]': 'uid', 'td[data-atqa]': 'atqa', 'td[data-sak]': 'sak'};
+
+TNP3.uid = '';
+TNP3.keysA = {};
+
+TNP3.trailers = true;
+TNP3.sectors = true;
+TNP3.renders = true;
+TNP3.errors = true;
+
+TNP3.allblocks = {};
+
+TNP3.hex2a = function(hexx) {
+	var hex = hexx.toString();
+	var str = '';
+	for (var i = 0; i < hex.length; i += 2) {
+		hexint = parseInt(hex.substr(i, 2), 16);
+		if (hexint < 32 || hexint > 126) {
+			asc = String.fromCharCode(160);
+		} else {
+			asc = String.fromCharCode(hexint);
+		};
+		str += asc;
+	};
+	return str;
+};
+
+TNP3.hex2u = function(hexx) {
+	var hex = hexx.toString();
+	var bytes = new Uint8Array(hex.length / 2);
+	for (var i = 0; i < bytes.length; i++) {
+		bytes[i] = parseInt(hex.substr(i*2, 2), 16);
+	};
+	var d = new TextDecoder('utf-8');
+	var str = d.decode(bytes);
+	return str;
+};
+
+TNP3.readbutton = function() {
+	reqwest({url: '/json-tnp3-reader', type: 'json', success: function(readjson) {
+		if ("error" in readjson) {
+			$p('#tnp3info').render({}, TNP3.infodirective);
+			alert(readjson.error);
+		} else {
+			TNP3.uid = readjson.uid;
+			TNP3.keysA = readjson.keysA;
+			$p('#tnp3info').render(readjson, TNP3.infodirective);
+		};
+	}});
+};
+
+TNP3.renderblock = function(b, readjson) {
+	var blockdirective = {};
+	var blockNo = ('00'+b).slice(-2);
+	var buttonclass = '';
+	blockdirective['td[data-b' + blockNo + '].error'] = 'error';
+	blockdirective['td[data-b' + blockNo + '].data'] = 'data';
+	blockdirective['td[data-b' + blockNo + '].ascii'] = 'ascii';
+	blockdirective['td[data-b' + blockNo + '].unicode'] = 'unicode';
+	if (readjson.hasOwnProperty('error')) {
+		buttonclass = 'error';
+	} else if (readjson.hasOwnProperty('data')) {
+		TNP3.allblocks[b] = readjson.data;
+		readjson['ascii'] = TNP3.hex2a(readjson.data);
+		readjson['unicode'] = TNP3.hex2u(readjson.data);
+	};
+	document.getElementById('readb' + blockNo).className = buttonclass;
+	$p('#tnp3token').render(readjson, blockdirective);
+};
+
+TNP3.allsectorsbutton = function() {
+	for (var b = 0; b < 64; b++) {
+		var readjson = JSON.parse(reqwest({url: '/json-tnp3-block', data: {keya: TNP3.keysA[Math.floor(b/4.0)], block: b}, type: 'json', async: false}).request.response);
+		TNP3.renderblock(b, readjson);
+	};
+	TNP3.tablebinds();
+};
+
+TNP3.trailersbutton = function() {
+	trailers = document.querySelectorAll('[data-trailer]');
+	if (TNP3.trailers) {
+		TNP3.trailers = false;
+		trailerclass = 'none';
+	} else {
+		TNP3.trailers = true;
+		trailerclass = '';
+	};
+	for (var a = 0; a < trailers.length; a++) {
+		trailers[a].className = trailerclass;
+	};
+};
+
+TNP3.showhidesectors = function() {
+	if (TNP3.sectors) {
+		TNP3.sectors = false;
+		sectorclass = 'none';
+	} else {
+		TNP3.sectors = true;
+		sectorclass = '';
+	};
+	sectors = document.querySelectorAll('tr>th[rowspan], tr[data-trailer]>th:first-of-type');
+	for (var a = 0; a < sectors.length; a++) {
+		sectors[a].className = sectorclass;
+	};
+};
+
+TNP3.rendersbutton = function() {
+	if (TNP3.renders) {
+		TNP3.renders = false;
+		asciiclass = 'ascii none';
+		unicodeclass = 'unicode none';
+	} else {
+		TNP3.renders = true;
+		asciiclass = 'ascii';
+		unicodeclass = 'unicode';
+	};
+	asciis = document.getElementsByClassName('ascii');
+	for (var a = 0; a < asciis.length; a++) {
+		asciis[a].className = asciiclass;
+	};
+	unicodes = document.getElementsByClassName('unicode');
+	for (var b = 0; b < unicodes.length; b++) {
+		unicodes[b].className = unicodeclass;
+	};
+};
+
+TNP3.errorsbutton = function() {
+	if (TNP3.errors) {
+		TNP3.errors = false;
+		refreshclass = 'none';
+		errorclass = 'error none';
+	} else {
+		TNP3.errors = true;
+		refreshclass = '';
+		errorclass = 'error';
+	};
+	refreshes = document.querySelectorAll('#tnp3token tr>th:last-of-type');
+	for (var a = 1; a < refreshes.length; a++) {
+		refreshes[a].className = refreshclass;
+	};
+	errors = document.getElementsByClassName('error');
+	for (var b = 0; b < errors.length; b++) {
+		errors[b].className = errorclass;
+	};
+};
+
+TNP3.blockbutton = function() {
+	var blockdirective = {};
+	var blockNo = this.id.slice(-2);
+	var blockInt = parseInt(blockNo);
+	
+	var readjson = JSON.parse(reqwest({url: '/json-tnp3-block', data: {keya: TNP3.keysA[Math.floor(blockInt/4.0)], block: parseInt(blockNo)}, type: 'json', async: false}).request.response);
+	TNP3.renderblock(blockInt, readjson);
+	
+	TNP3.tablebinds();
+};
+
+TNP3.sectorbutton = function() {
+	var sectorNo = this.id.slice(-2);
+	var sectorInt = parseInt(sectorNo);
+	var firstblock = sectorInt*4;
+	
+	for (var b = firstblock; b < firstblock+4; b++) {
+		var readjson = JSON.parse(reqwest({url: '/json-tnp3-block', data: {keya: TNP3.keysA[sectorInt], block: b}, type: 'json', async: false}).request.response);
+		TNP3.renderblock(b, readjson);
+	};
+	TNP3.tablebinds();
+};
+
+TNP3.tablebinds = function() {
+	for (var s = 0; s < 16; s++) {
+		var sectorNo = ('00'+s).slice(-2);
+		document.getElementById('reads' + sectorNo).onclick = TNP3.sectorbutton;
+	};
+	for (var b = 0; b < 64; b++) {
+		var blockNo = ('00'+b).slice(-2);
+		document.getElementById('readb' + blockNo).onclick = TNP3.blockbutton;
+	};
+};
+
+TNP3.editorsbutton = function() {
+	if (Object.keys(TNP3.allblocks).length < 64) {
+		alert('not all blocks have been loaded');
+	} else {
+		var olded = document.getElementById('oldtext');
+		var newed = document.getElementById('newtext');
+		for (var a = 0; a < 64; a++) {
+			olded.value += TNP3.allblocks[a];
+			if (a < 63) olded.value += '\n';
+			newed.value += TNP3.allblocks[a];
+			if (a < 63) newed.value += '\n';
+		};
+	};
+};
+
+TNP3.clearbutton = function() {
+	document.getElementById('oldtext').value = '';
+	document.getElementById('newtext').value = '';
+};
+
+TNP3.validatebutton = function() {
+	var newed = document.getElementById('newtext');
+	var blocks = newed.value.split('\n');
+	var badblocks = {};
+	for (var a = 0; a < 64; a++) {
+		if (/^[0-9A-F]{32}$/i.test(blocks[a]) == false) {
+			badblocks[a] = true;
+		};
+	};
+	if (Object.keys(badblocks).length > 0) {
+		newed.value = '';
+		for (var b = 0; b < 64; b++) {
+			newed.value += blocks[b];
+			if (badblocks[b]) newed.value += ' *';
+			if (b < 63) newed.value += '\n';
+		};
+	};
+};
+
+TNP3.savetoytxt = function() {
+	if (Object.keys(TNP3.allblocks).length < 64) {
+		alert('not all blocks have been loaded');
+	} else {
+		var blockdata = '';
+		for (var a = 0; a < 64; a++) {
+			blockdata += TNP3.allblocks[a];
+			if (a < 63) blockdata += '\n';
+		};
+		var addlname = document.getElementById('addlname').value;
+		if (addlname != '') addlname = '-' + addlname;
+		var blob = new Blob([blockdata], {type: 'text/plain;charset=utf-8'});
+		saveAs(blob, TNP3.uid + addlname + '.txt');
+	};
+};
+
+TNP3.savemuttxt = function() {
+	if (Object.keys(TNP3.allblocks).length < 64) {
+		alert('not all blocks have been loaded');
+	} else {
+		var blockdata = '';
+		for (var a = 4; a < 64; a++) {
+			console.log(a, TNP3.allblocks[a]);
+			blockdata += TNP3.allblocks[a];
+			if (a < 63) blockdata += '\n';
+			if ((a + 2) % 4 == 0) a++;
+		};
+		var addlname = document.getElementById('addlname').value;
+		if (addlname != '') addlname = '-' + addlname;
+		var blob = new Blob([blockdata], {type: 'text/plain;charset=utf-8'});
+		saveAs(blob, TNP3.uid + addlname + '.mut.txt');
+	};
+};
+
+TNP3.savetoybin = function() {
+	if (Object.keys(TNP3.allblocks).length < 64) {
+		alert('not all blocks have been loaded');
+	} else {
+		var bytes = new Uint8Array(1024);
+		var byte = 0;
+		for (var a = 0; a < 64; a++) {
+			var hex = TNP3.allblocks[a].toString();
+			for (var i = 0; i < hex.length / 2; i++) {
+				bytes[byte] = parseInt(hex.substr(i*2, 2), 16);
+				byte++;
+			};
+		};
+		var addlname = document.getElementById('addlname').value;
+		if (addlname != '') addlname = '-' + addlname;
+		var blob = new Blob([bytes], {type: 'application/octet-stream'});
+		saveAs(blob, TNP3.uid + addlname + '.bin');
+	};
+};
+
+TNP3.savemutbin = function() {
+	if (Object.keys(TNP3.allblocks).length < 64) {
+		alert('not all blocks have been loaded');
+	} else {
+		var bytes = new Uint8Array(720);
+		var byte = 0;
+		for (var a = 4; a < 64; a++) {
+			var hex = TNP3.allblocks[a].toString();
+			for (var i = 0; i < hex.length / 2; i++) {
+				bytes[byte] = parseInt(hex.substr(i*2, 2), 16);
+				byte++;
+			};
+			if ((a + 2) % 4 == 0) a++;
+		};
+		var addlname = document.getElementById('addlname').value;
+		if (addlname != '') addlname = '-' + addlname;
+		var blob = new Blob([bytes], {type: 'application/octet-stream'});
+		saveAs(blob, TNP3.uid + addlname + '.mut.bin');
+	};
+};
+
+TNP3.today = new Date();
+TNP3.yyyymmdd = TNP3.today.getFullYear() + ('00' + (TNP3.today.getMonth() + 1)).slice(-2) + ('00' + TNP3.today.getDate()).slice(-2);
+
+document.getElementById('readtnp3').onclick = TNP3.readbutton;
+document.getElementById('readsectors').onclick = TNP3.allsectorsbutton;
+document.getElementById('toggletrailers').onclick = TNP3.trailersbutton;
+document.getElementById('togglesectors').onclick = TNP3.showhidesectors;
+document.getElementById('togglerenders').onclick = TNP3.rendersbutton;
+document.getElementById('toggleerrors').onclick = TNP3.errorsbutton;
+document.getElementById('loadeditors').onclick = TNP3.editorsbutton;
+document.getElementById('cleareditors').onclick = TNP3.clearbutton;
+document.getElementById('validateeditors').onclick = TNP3.validatebutton;
+document.getElementById('savetoytxt').onclick = TNP3.savetoytxt;
+document.getElementById('savemuttxt').onclick = TNP3.savemuttxt;
+document.getElementById('savetoybin').onclick = TNP3.savetoybin;
+document.getElementById('savemutbin').onclick = TNP3.savemutbin;
+document.getElementById('addlname').placeholder = TNP3.yyyymmdd;
+TNP3.tablebinds();
+</script>
+</body>
+</html>
