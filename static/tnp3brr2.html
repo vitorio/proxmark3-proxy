@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TNP3 BRR</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/zeitgeist.css">
+    <script src="/static/Iuppiter.js"></script>
+</head>
+<body>
+
+<h1>TNP3xxx Load, View</h1>
+
+<h2>Load</h2>
+<p>
+<input type="file" id="restorefile"> <button id="restoretnp3">Load</button><br>
+<a id="backuphexedit2" target="_blank">View toy in hexed.it</a><br>
+</p>
+
+<script>
+var TNP3 = TNP3 || {};
+
+TNP3.keysA = {};
+
+TNP3.allblocks = {};
+TNP3.newblocks = {};
+TNP3.oldblocks = {};
+for (var a=0; a<64; a++) {
+	TNP3.allblocks[a] = '';
+	TNP3.newblocks[a] = '';
+	TNP3.oldblocks[a] = '';
+};
+
+TNP3.restoretnp3 = function() {
+	var toyfile = document.getElementById('restorefile').files[0];
+	var toyuid = toyfile.name.match(/[0-9A-F]{8}/i);
+	if (toyuid == null) {
+		alert('filename does not have a UID in it');
+		return false;
+	};
+	
+	for (var a=0; a<64; a++) {
+		TNP3.newblocks[a] = '';
+	};
+	var toysize = toyfile.size;
+	var reader = new FileReader();
+	// It's either a 1024 byte binary file exactly, or a text file
+	if (toysize == 1024) {
+		reader.onload = function() {
+			var block = 0;
+			var byte = 0;
+			TNP3.newblocks[block] = '';
+			for (var a=0; a < 1024; a++) {
+				hex = ('00' + reader.result[a].charCodeAt().toString(16)).slice(-2);
+				TNP3.newblocks[block] += hex.toString();
+				byte++;
+				if (byte == 16) {
+					byte = 0;
+					block++;
+					TNP3.newblocks[block] = '';
+				};
+			};
+			TNP3.writerestorefile();
+		};
+		reader.readAsBinaryString(toyfile);
+	} else {
+		reader.onload = function() {
+			var blocks = reader.result.split('\n');
+			if (blocks.length < 64) {
+				alert('file does not have 64 blocks separated by newlines');
+				return false;
+			};
+			for (var a=0; a<64; a++) {
+				blocks[a] = blocks[a].trim();
+				if (blocks[a].length != 32 || /^[0-9A-F]{32}$/i.test(blocks[a]) == false) {
+					alert('file does not have 32 hex character blocks');
+					return false;
+				} else {
+					TNP3.newblocks[a] = blocks[a];
+				};
+			};
+			TNP3.writerestorefile();
+		};
+		reader.readAsText(toyfile);		
+	};
+};
+
+TNP3.writerestorefile = function() {
+	var bytes = [];
+	for (var a = 0; a < 64; a++) {
+		var hex = TNP3.newblocks[a].toString();
+		for (var i = 0; i < hex.length / 2; i++) {
+			bytes.push(parseInt(hex.substr(i*2, 2), 16));
+		};
+	};
+	var compressed = Iuppiter.compress(bytes);
+	var data_cmp = new Uint8Array(compressed);
+	var b64encoded = btoa(String.fromCharCode.apply(null, data_cmp));
+	document.getElementById('backuphexedit2').href = 'https://hexed.it#base64+lzjb:' + b64encoded;
+};
+
+TNP3.savetoytxt = function() {
+	if (Object.keys(TNP3.allblocks).length < 64) {
+		alert('not all blocks have been loaded');
+	} else {
+		var blockdata = '';
+		for (var a = 0; a < 64; a++) {
+			blockdata += TNP3.allblocks[a];
+			if (a < 63) blockdata += '\n';
+		};
+		var addlname = document.getElementById('addlname').value;
+		if (addlname != '') addlname += '-';
+		var blob = new Blob([blockdata], {type: 'text/plain;charset=utf-8'});
+		saveAs(blob, addlname + TNP3.uid + '.txt');
+	};
+};
+
+TNP3.savetoybin = function() {
+	if (Object.keys(TNP3.allblocks).length < 64) {
+		alert('not all blocks have been loaded');
+	} else {
+		var bytes = new Uint8Array(1024);
+		var byte = 0;
+		for (var a = 0; a < 64; a++) {
+			var hex = TNP3.allblocks[a].toString();
+			for (var i = 0; i < hex.length / 2; i++) {
+				bytes[byte] = parseInt(hex.substr(i*2, 2), 16);
+				byte++;
+			};
+		};
+		var addlname = document.getElementById('addlname').value;
+		if (addlname != '') addlname += '-';
+		var blob = new Blob([bytes], {type: 'application/octet-stream'});
+		saveAs(blob, addlname + TNP3.uid + '.bin');
+	};
+};
+
+document.getElementById('restoretnp3').onclick = TNP3.restoretnp3;
+</script>
+</body>
+</html>
