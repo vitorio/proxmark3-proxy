@@ -10,7 +10,7 @@ These are notes from a project worklog; this is not usable/production code, this
 
 Okay, so visualizers: https://gfycat.com/JoyfulSeparateIsabellinewheatear
 
-I didn't see an easy way to include an HTTP server into the proxmark client's Lua implementation, so after playing around with Python expect, I have a simple Flask debug web server talking to the proxmark client using pexpect, running Lua scripts that output JSON.
+I didn't see an easy way to include an HTTP server into the proxmark client's Lua implementation, so after playing around with Python expect, I have a simple Flask debug web server talking to the proxmark client using pexpect, running [Lua scripts that output JSON](https://github.com/vitorio/proxmark3/tree/securitoys/client/scripts).
 
 ```console
 pi@raspberrypi ~/proxmark3/client $ python ~/pm3expect.py 
